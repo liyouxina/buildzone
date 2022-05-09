@@ -17,6 +17,7 @@ func NewContentAddressableStorageServer() *ContentAddressableStorageServer {
 
 func (s *ContentAddressableStorageServer) FindMissingBlobs(ctx context.Context, req *repb.FindMissingBlobsRequest) (*repb.FindMissingBlobsResponse, error) {
 	log.Infof("ContentAddressableStorageServer FindMissingBlobs")
+
 	rsp := &repb.FindMissingBlobsResponse{}
 	return rsp, nil
 }
