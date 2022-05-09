@@ -2,6 +2,7 @@ package main
 
 import (
 	repb "github.com/liyouxina/buildzone/protogen/remote_execution"
+	"github.com/liyouxina/buildzone/server/enviroment"
 	"github.com/liyouxina/buildzone/server/remote_cache/action_cache_server"
 	"github.com/liyouxina/buildzone/server/remote_cache/byte_stream_server"
 	"github.com/liyouxina/buildzone/server/remote_cache/capabilities_server"
@@ -12,6 +13,7 @@ import (
 )
 
 func main() {
+	enviroment.GlobalEnviroment
 	grpcServer := grpc.NewServer()
 	capabilitiesServer := capabilities_server.NewCapabilitiesServer()
 	repb.RegisterCapabilitiesServer(grpcServer, capabilitiesServer)
