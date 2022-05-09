@@ -3,6 +3,7 @@ package content_addressable_storage_server
 import (
 	"context"
 	repb "github.com/liyouxina/buildzone/protogen/remote_execution"
+	"github.com/liyouxina/buildzone/server/enviroment"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -17,9 +18,16 @@ func NewContentAddressableStorageServer() *ContentAddressableStorageServer {
 
 func (s *ContentAddressableStorageServer) FindMissingBlobs(ctx context.Context, req *repb.FindMissingBlobsRequest) (*repb.FindMissingBlobsResponse, error) {
 	log.Infof("ContentAddressableStorageServer FindMissingBlobs")
-
-	rsp := &repb.FindMissingBlobsResponse{}
-	return rsp, nil
+	response := &repb.FindMissingBlobsResponse{}
+	cache := enviroment.GlobalEnviromentContext.GetCache()
+	missing, err := cache.FindMissing(ctx, req.BlobDigests)
+	if err != nil {
+		return nil, err
+	}
+	for _, m := range missing {
+		response.MissingBlobDigests = append(response.MissingBlobDigests, m)
+	}
+	return response, nil
 }
 
 func (s *ContentAddressableStorageServer) BatchUpdateBlobs(ctx context.Context, req *repb.BatchUpdateBlobsRequest) (*repb.BatchUpdateBlobsResponse, error) {

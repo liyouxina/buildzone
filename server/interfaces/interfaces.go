@@ -8,7 +8,6 @@ import (
 
 type CacheType int
 type Cache interface {
-	WithIsolation(ctx context.Context, cacheType CacheType, remoteInstanceName string) (Cache, error)
 	Contains(ctx context.Context, d *repb.Digest) (bool, error)
 	FindMissing(ctx context.Context, digests []*repb.Digest) ([]*repb.Digest, error)
 	Get(ctx context.Context, d *repb.Digest) ([]byte, error)
