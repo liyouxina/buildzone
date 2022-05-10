@@ -17,4 +17,6 @@ type Cache interface {
 	Delete(ctx context.Context, d *repb.Digest) error
 	Reader(ctx context.Context, d *repb.Digest, offset int64) (io.ReadCloser, error)
 	Writer(ctx context.Context, d *repb.Digest) (io.WriteCloser, error)
+
+	WriteAppend(ctx context.Context, d *repb.Digest, data []byte) error //deprecated
 }

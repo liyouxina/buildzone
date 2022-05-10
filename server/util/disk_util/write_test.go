@@ -1,14 +1,39 @@
 package disk_util
 
-import "testing"
-
-const (
-	FILE_FOR_TEST = "/tmp/buildzone/test_write_over"
-	FILE_DIR_FOR_TEST_= "/tmp/buildzone"
+import (
+	"os"
+	"testing"
 )
 
-func Test_getDirFromFullPath(t *testing.T)  {
-	if (getDirFromFullPath(FILE_FOR_TEST) != FILE_DIR_FOR_TEST_) {
+const (
+	FILE_FOR_TEST      = "/tmp/buildzone/test_write_over"
+	FILE_DIR_FOR_TEST_ = "/tmp/buildzone"
+)
+
+func TestWriteAppend(t *testing.T) {
+	_ = os.Remove(FILE_FOR_TEST)
+	if err := EnsurePathExist(FILE_DIR_FOR_TEST_); err != nil {
+		t.Errorf("error EnsurePathExist %v", err)
+		t.Fail()
+	}
+	content := []byte{'a', 'b', 'c'}
+	if err := WriteAppend(FILE_FOR_TEST, content); err != nil {
+		t.Fail()
+	}
+	if err := WriteAppend(FILE_FOR_TEST, content); err != nil {
+		t.Fail()
+	}
+	readContent, err := Read(FILE_FOR_TEST)
+	if err != nil {
+		t.Fail()
+	}
+	if !byteArrayEqual(readContent, []byte{'a', 'b', 'c', 'a', 'b', 'c'}) {
+		t.Fail()
+	}
+}
+
+func Test_getDirFromFullPath(t *testing.T) {
+	if getDirFromFullPath(FILE_FOR_TEST) != FILE_DIR_FOR_TEST_ {
 		t.Fail()
 	}
 }
@@ -21,6 +46,7 @@ func TestEnsurePathExist(t *testing.T) {
 }
 
 func TestWriteOver(t *testing.T) {
+	_ = os.Remove(FILE_FOR_TEST)
 	content := []byte{'a', 'b', 'c'}
 	err := WriteOver(FILE_FOR_TEST, content)
 	if err != nil {

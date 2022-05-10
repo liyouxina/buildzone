@@ -14,16 +14,23 @@ import (
 )
 
 func main() {
-	enviroment.GlobalEnviromentContext.SetCache(disk_cache.NewDiskCache("/tmp/buildzone"))
+	diskCache := disk_cache.NewDiskCache("/tmp/buildzone")
+	env := NewEnviromentFromConfig()
+	env.SetCache(diskCache)
 	grpcServer := grpc.NewServer()
 	capabilitiesServer := capabilities_server.NewCapabilitiesServer()
 	repb.RegisterCapabilitiesServer(grpcServer, capabilitiesServer)
-	casServer := content_addressable_storage_server.NewContentAddressableStorageServer()
+	casServer := content_addressable_storage_server.NewContentAddressableStorageServer(env)
 	repb.RegisterContentAddressableStorageServer(grpcServer, casServer)
-	byteStreamServer := byte_stream_server.NewByteStreamServer()
+	byteStreamServer := byte_stream_server.NewByteStreamServer(env)
 	bspb.RegisterByteStreamServer(grpcServer, byteStreamServer)
-	actionCacheServer := action_cache_server.NewActionCacheServer()
+	actionCacheServer := action_cache_server.NewActionCacheServer(env)
 	repb.RegisterActionCacheServer(grpcServer, actionCacheServer)
 	lis, _ := net.Listen("tcp", "localhost:28701")
 	grpcServer.Serve(lis)
+}
+
+func NewEnviromentFromConfig() *enviroment.Enviroment {
+	// TODO
+	return &enviroment.Enviroment{}
 }
