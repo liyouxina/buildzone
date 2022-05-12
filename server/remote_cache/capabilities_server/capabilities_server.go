@@ -38,5 +38,9 @@ func (s *CapabilitiesServer) GetCapabilities(ctx context.Context, req *repb.GetC
 		MaxBatchTotalSizeBytes:      0,
 		SymlinkAbsolutePathStrategy: repb.SymlinkAbsolutePathStrategy_ALLOWED,
 	}
+	response.ExecutionCapabilities = &repb.ExecutionCapabilities{
+		DigestFunction: repb.DigestFunction_SHA256,
+		ExecEnabled: true,
+	}
 	return &response, nil
 }

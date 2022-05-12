@@ -21,6 +21,7 @@ func NewActionCacheServer(env *enviroment.Enviroment) *ActionCacheServer {
 }
 
 func (s *ActionCacheServer) GetActionResult(ctx context.Context, req *repb.GetActionResultRequest) (*repb.ActionResult, error) {
+	log.Infof("ActionCacheServer GetActionResult")
 	response := &repb.ActionResult{}
 	cache := s.env.GetCache()
 	blob, err := cache.Get(ctx, req.ActionDigest)

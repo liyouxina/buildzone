@@ -7,6 +7,7 @@ import (
 	"github.com/liyouxina/buildzone/server/remote_cache/byte_stream_server"
 	"github.com/liyouxina/buildzone/server/remote_cache/capabilities_server"
 	"github.com/liyouxina/buildzone/server/remote_cache/content_addressable_storage_server"
+	"github.com/liyouxina/buildzone/server/remote_execution/execution_server"
 	"github.com/liyouxina/buildzone/server/storage/disk_cache"
 	bspb "google.golang.org/genproto/googleapis/bytestream"
 	"google.golang.org/grpc"
@@ -26,6 +27,8 @@ func main() {
 	bspb.RegisterByteStreamServer(grpcServer, byteStreamServer)
 	actionCacheServer := action_cache_server.NewActionCacheServer(env)
 	repb.RegisterActionCacheServer(grpcServer, actionCacheServer)
+	executionServer := execution_server.NewExecutionServer(env)
+	repb.RegisterExecutionServer(grpcServer, executionServer)
 	lis, _ := net.Listen("tcp", "localhost:28701")
 	grpcServer.Serve(lis)
 }
