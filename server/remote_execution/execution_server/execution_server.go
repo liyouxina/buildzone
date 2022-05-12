@@ -18,31 +18,31 @@ func NewExecutionServer(env *enviroment.Enviroment) *ExecutionServer {
 }
 
 func (s *ExecutionServer) Execute(req *repb.ExecuteRequest, stream repb.Execution_ExecuteServer) error {
-	log.Infof("ActionCacheServer Execute")
+	log.Infof("ExecutionServer Execute")
 	return nil
 }
 
 func (s *ExecutionServer) Dispatch(ctx context.Context, req *repb.ExecuteRequest) (string, error) {
-	log.Infof("ActionCacheServer Dispatch")
+	log.Infof("ExecutionServer Dispatch")
 	return "", nil
 }
 
 func (s *ExecutionServer) WaitExecution(req *repb.WaitExecutionRequest, stream repb.Execution_WaitExecutionServer) error {
-	log.Infof("ActionCacheServer WaitExecution")
+	log.Infof("ExecutionServer WaitExecution")
 	return nil
 }
 
 func (s *ExecutionServer) MarkExecutionFailed(ctx context.Context, taskID string, reason error) error {
-	log.Infof("ActionCacheServer MarkExecutionFailed")
+	log.Infof("ExecutionServer MarkExecutionFailed")
 	return nil
 }
 
 func (s *ExecutionServer) PublishOperation(stream repb.Execution_PublishOperationServer) error {
-	log.Infof("ActionCacheServer PublishOperation")
+	log.Infof("ExecutionServer PublishOperation")
 	return nil
 }
 
 func (s *ExecutionServer) Cancel(ctx context.Context, invocationID string) error {
-	log.Infof("ActionCacheServer Cancel")
+	log.Infof("ExecutionServer Cancel")
 	return nil
 }

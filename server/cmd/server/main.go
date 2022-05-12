@@ -9,12 +9,16 @@ import (
 	"github.com/liyouxina/buildzone/server/remote_cache/content_addressable_storage_server"
 	"github.com/liyouxina/buildzone/server/remote_execution/execution_server"
 	"github.com/liyouxina/buildzone/server/storage/disk_cache"
+	log "github.com/sirupsen/logrus"
 	bspb "google.golang.org/genproto/googleapis/bytestream"
 	"google.golang.org/grpc"
 	"net"
 )
 
 func main() {
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp: true,
+	})
 	diskCache := disk_cache.NewDiskCache("/tmp/buildzone")
 	env := NewEnviromentFromConfig()
 	env.SetCache(diskCache)
