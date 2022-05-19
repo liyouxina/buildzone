@@ -1,4 +1,4 @@
-package disk_util
+package disk
 
 import (
 	log "github.com/sirupsen/logrus"

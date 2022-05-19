@@ -5,9 +5,9 @@ import (
 	"github.com/golang/protobuf/proto"
 	repb "github.com/liyouxina/buildzone/protogen/remote_execution"
 	"github.com/liyouxina/buildzone/server/enviroment"
-	"github.com/liyouxina/buildzone/server/remote_execution/operation"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/genproto/googleapis/longrunning"
+	"google.golang.org/protobuf/types/known/anypb"
 )
 
 type ExecutionServer struct {
@@ -29,14 +29,30 @@ func (s *ExecutionServer) Execute(req *repb.ExecuteRequest, stream repb.Executio
 		if err != nil {
 			return err
 		}
-		actionResult := repb.ActionResult{}
-		_ = proto.Unmarshal(blob, &actionResult)
-
-		req.
-		repb.Tree
-		operation.Assemble(repb.ExecutionStage_COMPLETED, req.ActionDigest)
+		action := &repb.Action{}
+		err = proto.Unmarshal(blob, action)
+		if err != nil {
+			return err
+		}
+		blob, err = cache.Get(ctx, action.CommandDigest)
+		if err != nil {
+			return err
+		}
+		command := &repb.Command{}
+		err = proto.Unmarshal(blob, command)
+		if err != nil {
+			return err
+		}
+		metadata, _ := anypb.New(&repb.ExecuteOperationMetadata{
+			Stage: repb.ExecutionStage_COMPLETED,
+			ActionDigest: &repb.Digest{
+				Hash:      "8e9cf629af95185ce4d758f8f3aeced9d8c5f5b6abc68028199dc58cfccdbb2b",
+				SizeBytes: 144,
+			},
+		})
 		stream.Send(&longrunning.Operation{
-			Name: `{}`,
+			Name:     "blobs/8e9cf629af95185ce4d758f8f3aeced9d8c5f5b6abc68028199dc58cfccdbb2b/57808",
+			Metadata: metadata,
 		})
 	}
 	return nil
@@ -49,10 +65,13 @@ func (s *ExecutionServer) Dispatch(ctx context.Context, req *repb.ExecuteRequest
 
 func (s *ExecutionServer) WaitExecution(req *repb.WaitExecutionRequest, stream repb.Execution_WaitExecutionServer) error {
 	log.Infof("ExecutionServer WaitExecution %+v", *req)
-	stream.Send(&longrunning.Operation{
-		Name: `7aa839330d21a5a8b125698ef46ac614286bf64859ccfab1faae70f315374262`,
+	metadata, _ := anypb.New(&repb.ExecuteOperationMetadata{
+		Stage: repb.ExecutionStage_COMPLETED,
 	})
-	repb.ExecuteResponse
+	stream.Send(&longrunning.Operation{
+		Name:     "blobs/8e9cf629af95185ce4d758f8f3aeced9d8c5f5b6abc68028199dc58cfccdbb2b/57808",
+		Metadata: metadata,
+	})
 	return nil
 }
 

@@ -30,6 +30,7 @@ func (s *ContentAddressableStorageServer) FindMissingBlobs(ctx context.Context, 
 	for _, m := range missing {
 		response.MissingBlobDigests = append(response.MissingBlobDigests, m)
 	}
+	log.Infof("ContentAddressableStorageServer FindMissingBlobs response %+v", response)
 	return response, nil
 }
 

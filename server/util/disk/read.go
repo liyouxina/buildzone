@@ -1,4 +1,4 @@
-package disk_util
+package disk
 
 import (
 	log "github.com/sirupsen/logrus"
@@ -8,7 +8,7 @@ import (
 
 func Read(path string) ([]byte, error) {
 	bytes, err := ioutil.ReadFile(path)
-	if err != nil{
+	if err != nil {
 		log.Errorf("error reading file %s", path)
 		return nil, err
 	}

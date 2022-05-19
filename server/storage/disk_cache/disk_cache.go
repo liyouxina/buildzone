@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	repb "github.com/liyouxina/buildzone/protogen/remote_execution"
-	"github.com/liyouxina/buildzone/server/util/disk_util"
+	"github.com/liyouxina/buildzone/server/util/disk"
 	log "github.com/sirupsen/logrus"
 	"io"
 )
@@ -22,7 +22,7 @@ type DiskCache struct {
 func (c DiskCache) FindMissing(ctx context.Context, digests []*repb.Digest) ([]*repb.Digest, error) {
 	missing := []*repb.Digest{}
 	for _, digest := range digests {
-		contains, err := disk_util.Exists(fmt.Sprintf("%s/%s", c.path, digest.Hash))
+		contains, err := disk.Exists(fmt.Sprintf("%s/%s", c.path, digest.Hash))
 		if contains {
 			continue
 		}
@@ -35,7 +35,7 @@ func (c DiskCache) FindMissing(ctx context.Context, digests []*repb.Digest) ([]*
 }
 
 func (c DiskCache) Contains(ctx context.Context, d *repb.Digest) (bool, error) {
-	contains, err := disk_util.Exists(fmt.Sprintf("%s/%s", c.path, d.Hash))
+	contains, err := disk.Exists(fmt.Sprintf("%s/%s", c.path, d.Hash))
 	if contains {
 		return true, nil
 	}
@@ -47,7 +47,7 @@ func (c DiskCache) Contains(ctx context.Context, d *repb.Digest) (bool, error) {
 }
 
 func (c DiskCache) Get(ctx context.Context, d *repb.Digest) ([]byte, error) {
-	return disk_util.Read(fmt.Sprintf("%s/%s", c.path, d.Hash))
+	return disk.Read(fmt.Sprintf("%s/%s", c.path, d.Hash))
 }
 
 func (c DiskCache) GetMulti(ctx context.Context, digests []*repb.Digest) (map[*repb.Digest][]byte, error) {
@@ -55,14 +55,14 @@ func (c DiskCache) GetMulti(ctx context.Context, digests []*repb.Digest) (map[*r
 }
 
 func (c DiskCache) Set(ctx context.Context, d *repb.Digest, data []byte) error {
-	return disk_util.WriteOver(fmt.Sprintf("%s/%s", c.path, d.Hash), data)
+	return disk.WriteOver(fmt.Sprintf("%s/%s", c.path, d.Hash), data)
 }
 
 func (c DiskCache) SetMulti(ctx context.Context, kvs map[*repb.Digest][]byte) error {
 	var err error
 	for d, data := range kvs {
 		fullPath := fmt.Sprintf("%s/%s", c.path, d.Hash)
-		err = disk_util.WriteOver(fullPath, data)
+		err = disk.WriteOver(fullPath, data)
 	}
 	if err != nil {
 		return err
@@ -83,5 +83,5 @@ func (c DiskCache) Writer(ctx context.Context, d *repb.Digest) (io.WriteCloser, 
 }
 
 func (c DiskCache) WriteAppend(ctx context.Context, d *repb.Digest, data []byte) error {
-	return disk_util.WriteAppend(fmt.Sprintf("%s/%s", c.path, d.Hash), data)
+	return disk.WriteAppend(fmt.Sprintf("%s/%s", c.path, d.Hash), data)
 }

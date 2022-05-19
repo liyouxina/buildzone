@@ -32,6 +32,7 @@ func (s *ActionCacheServer) GetActionResult(ctx context.Context, req *repb.GetAc
 		log.Errorf("ActionCacheServer GetActionResult error unmarshal %v", err)
 		return nil, err
 	}
+	log.Infof("ActionCacheServer GetActionResult response %+v", response)
 	return response, nil
 }
 
